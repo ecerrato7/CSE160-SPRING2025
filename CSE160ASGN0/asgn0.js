@@ -1,9 +1,9 @@
-// Global variables
+ 
 var canvas;
 var ctx;
 
 function handleDrawEvent() {
-  // Clear the canvas
+   
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Read the x and y coordinates for v1 from the input fields
@@ -32,8 +32,8 @@ function drawVector(v, color) {
 
   // Draw the vector
   ctx.beginPath();
-  ctx.moveTo(200, 200); // Start at the center of the canvas
-  ctx.lineTo(200 + scaledX, 200 - scaledY); // Adjust for canvas origin and scale
+  ctx.moveTo(200, 200);  
+  ctx.lineTo(200 + scaledX, 200 - scaledY); 
   ctx.stroke();
 }
 
@@ -76,7 +76,7 @@ function areaTriangle(v1, v2) {
 
 
 function handleDrawOpertionEvent() {
-  // Clear the canvas
+   
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   var x1 = parseFloat(document.getElementById('xInput1').value);
   var y1 = parseFloat(document.getElementById('yInput1').value);
@@ -147,14 +147,14 @@ function handleDrawOpertionEvent() {
 }
 
 function main() {
-  // Retrieve <canvas> element and context
+   
   canvas = document.getElementById('example');
   if (!canvas) {
     console.log('Failed to retrieve the <canvas> element');
     return false;
   }
   ctx = canvas.getContext('2d');
-  // Initial draw to test
+   
   drawVector(new Vector3([2.25, 2.25, 0]), "red");
   document.getElementById('drawButton1').addEventListener('click', handleDrawEvent);
   document.getElementById('drawButton2').addEventListener('click', handleDrawOpertionEvent);
