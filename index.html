@@ -1,7 +1,81 @@
 <!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Draw Vectors</title>
+  <style>
+    canvas {
+      background-color: black;
+    }
+    .controls {
+      color: rgb(0, 0, 0);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body onload="main()">  
+  <canvas id="example" width="400" height="400">
+    Please use a browser that supports "canvas"
+  </canvas>
+
+  <div class="controls">
+    <!-- Inputs for v1 -->
+    <label for="xInput1">V1 </label>
+    <label> x</label>
+    <input id="xInput1" type="number" step="0.1" value="0" />
+    <label> y</label>
+    <input id="yInput1" type="number" step="0.1" value="3" />
+    <br />
+
+    <!-- Inputs for v2 -->
+    <label>V2 </label>
+    <label> x</label>
+    <input id="xInput2" type="number" step="0.1" value="3" />
+    <label> y</label>
+    <input id="yInput2" type="number" step="0.1" value="0" />
+    <br />
+
+    <!-- First Draw Button (for just drawing v1 and v2) -->
+    <button id="drawButton1">Draw Vectors</button>
+  </div>
+
+  <div class="controls">
+    <label>Operation: </label>
+    <select name="Operation" id="operation">
+      <option value="Sub">Sub</option>
+      <option value="Add">Add</option>
+      <option value="Div">Div</option>
+      <option value="Mul">Mul</option>
+      <option value="Magnitude"> Magnitude </option>
+      <option value="Normalize"> Normalize  </option>
+      <option value="Angle between"> Angle between  </option>
+      <option value="Area"> Area  </option>
+    </select>
+    <label>Scalar: </label>
+    <input id="scalar" type="number" step="0.1" value="3" />
+    <br />
+
+    <!-- Second Draw Button (for operations) -->
+    <button id="drawButton2">Draw Operation</button>
+  </div>
+  <div id="magnitudeResult">
+    <p id="magnitudeV1">Magnitude of V1: </p>
+    <p id="magnitudeV2">Magnitude of V2: </p>
+  </div>
+  <div id="angleResult">
+    <p id="angleBetweenText">Angle between V1 and V2: </p>
+  </div>
+
+  <div id="areaResult">
+    <p id="areaText">Area of v1 and v2: </p>
+  </div>
+
+  <div >
+    <p> All results are shown in the console log as well. </p>
+  </div>
+
+  <script src="CSE160ASGN0/lib/cuon-matrix-cse160.js"></script>
+  <script src="CSE160ASGN0/asgn0.js"></script>
 </body>
 </html>
