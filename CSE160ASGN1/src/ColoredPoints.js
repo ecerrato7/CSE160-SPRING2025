@@ -92,8 +92,9 @@ function addActionForHTMLUI() {
     document.getElementById('Draw Triangle').onclick = function() { g_selectedType = TRIANGLE; };
     document.getElementById('Draw Circle').onclick = function() { g_selectedType = CIRCLE; };
     document.getElementById('Draw Picture').onclick = function() { drawPicture(); };
-  
-  }
+    document.getElementById('TargetGame').onclick = function() {startTargetGame();  canvas.onmousedown = clickTargetGame; };
+
+}
 
 function clearCanvas(){
     gl.clear(gl.COLOR_BUFFER_BIT);
@@ -202,6 +203,14 @@ function convertCoordinatesEventToGL(ev){
 function renderAllShapes(){
     gl.clear(gl.COLOR_BUFFER_BIT);
     //var len = g_points.length;
+    //Prevents random circle from disabling the other features.
+    if (gameStarted) {  
+      let target = new Circle();
+      target.position = g_target.position;
+      target.color = g_target.color;
+      target.size = g_target.size;
+      target.render();
+    }
     for (let i = 0; i < g_shapeList.length; i++) {
       g_shapeList[i].render();
     }
