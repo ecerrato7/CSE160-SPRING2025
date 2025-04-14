@@ -1,5 +1,7 @@
 // ColoredPoint.js (c) 2012 matsuda
 // Vertex shader program
+
+
 var VSHADER_SOURCE =
   'attribute vec4 a_Position;\n' +
   'uniform float u_Size;\n' +
@@ -31,9 +33,11 @@ function setupWebGL(){
     console.log('Failed to get the rendering context for WebGL');
     return;
   }
+  console.log('Canvas width:', canvas.width, 'Canvas height:', canvas.height);
 
 
 }
+
 function  connectVariablesToGLSL(){
   // Initialize shaders
   if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
@@ -62,8 +66,14 @@ function  connectVariablesToGLSL(){
 
 }
 //Global Variables
+const POINT = 'point';
+const TRIANGLE = 'triangle';
+const CIRCLE = 'circle';
 let g_selectedColor = [1.0, 1.0, 1.0, 1.0]; 
 let g_selectedSize = 5;
+let g_selectedType = POINT;  
+
+
 
 function addActionForHTMLUI() {
     document.getElementById('Clear').onclick = function() { clearCanvas(); };
@@ -78,20 +88,25 @@ function addActionForHTMLUI() {
     document.getElementById("sizeSlide").addEventListener("input", function() {g_selectedSize  = this.value;});
 
     //document.getElementById('Point').onclick = function() { g_selectedType = 'point'; };
-    document.getElementById('Draw Triangle').onclick = function() { g_selectedType = 'triangle'; };
-   document.getElementById('Draw Circle').onclick = function() { g_selectedType = 'circle'; };
-
-    
-}
+    document.getElementById('Point').onclick = function() { g_selectedType = POINT; };
+    document.getElementById('Draw Triangle').onclick = function() { g_selectedType = TRIANGLE; };
+    document.getElementById('Draw Circle').onclick = function() { g_selectedType = CIRCLE; };
+    document.getElementById('Draw Picture').onclick = function() { drawPicture(); };
+  
+  }
 
 function clearCanvas(){
     gl.clear(gl.COLOR_BUFFER_BIT);
     g_shapeList  = [];
 }
+
 let g_isDrawing = false; // The flag for drawing
+
 function main() {
     // Retrieve <canvas> element
     setupWebGL();
+    console.log('Canvas width:', canvas.width, 'Canvas height:', canvas.height);
+
     // Initialize shaders
     connectVariablesToGLSL();
     addActionForHTMLUI();
@@ -125,23 +140,23 @@ let g_shapeList = []; // The array for the position of a mouse press
 //var g_colors = [];  // The array to store the color of a point
 //var g_sizes = [];   // The array to store the size of a point
 
-let g_selectedType = 'point'; // The type of shape to be drawn
+
 
 function click(ev) {
    let [x, y] = convertCoordinatesEventToGL(ev);
-   let shape;
+   let point;
    if (g_selectedType === 'point') {
-     shape = new Point();
-   } else if (g_selectedType === 'triangle') {
-     shape = new Triangle();
-   } else if (g_selectedType === 'circle') {
-     shape = new Circle();
-   }
+    point = new Point();
+  } else if (g_selectedType === 'triangle') {
+    point = new Triangle();
+  } else if (g_selectedType === 'circle') {
+    point = new Circle();
+  }
  
-   shape.position = [x, y];
-   shape.color = g_selectedColor.slice();
-   shape.size = g_selectedSize;
-   g_shapeList.push(shape);
+   point.position = [x, y];
+   point.color = g_selectedColor.slice();
+   point.size = g_selectedSize;
+   g_shapeList.push(point);
  
    renderAllShapes();
  
