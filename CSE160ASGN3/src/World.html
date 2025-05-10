@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Change a Point Color</title>
+</head>
+
+<body onload="main()">
+  <canvas id="webgl" width="400" height="400">
+    Please use a browser that supports "canvas".
+  </canvas>
+
+  <div id="numdot"></div>
+  <br/><br/>
+  performance   FPS: <span id="fps">0</span><br>
+  ms: <span id="ms">0</span> ms
+  <div>
+    <label>
+      Magenta
+      <input type="range" id="magentaSlide" min="-180" max="180">
+    </label>
+    Animation
+    <button id="animationMagentaOnButton">On</button>
+    <button id="animationMagentaOffButton">Off</button>
+    <br/>
+
+    <label>
+      Yellow
+      <input type="range" id="yellowSlide" min="-180" max="180">
+    </label>
+    Animation
+    <button id="animationYellowOnButton">On</button>
+    <button id="animationYellowOffButton">Off</button>
+    <br/><br/>
+
+    <label>
+      Camera Angle
+      <input type="range" id="angleSlide" min="-180" max="180">
+      <br/><br/>
+      Camera Speed
+      <input type="range" id="speedSlider" min="0.01" max="1" step="0.01" value="0.1">
+      <br/><br/>
+      <button id="resetButton">Reset Camera</button>
+
+    </label>
+  </div>
+
+  <br/><br/>
+
+  <!-- WebGL and App Scripts -->
+  <script src="../lib/webgl-utils.js"></script>
+  <script src="../lib/webgl-debug.js"></script>
+  <script src="../lib/cuon-utils.js"></script>
+  <script src="../lib/stats.js"></script>
+  <script src="../lib/cuon-matrix-cse160.js"></script>
+  <script src="Point.js"></script>
+  <script src="Triangle.js"></script>
+  <script src="Circle.js"></script>
+  <script src="Cube.js"></script>
+  <script src="Camera.js"></script>
+  <script src="World.js"></script>
+</body>
+</html>

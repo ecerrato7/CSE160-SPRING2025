@@ -113,6 +113,10 @@ class Vector3 {
    * @return new vector
    */
   static cross(other1, other2) {
+    if (!other1 || !other2 || !other1.elements || !other2.elements) {
+        throw new Error('Invalid arguments passed to Vector3.cross');
+    }
+
     let a = other1.elements;
     let b = other2.elements;
 
@@ -120,11 +124,8 @@ class Vector3 {
     let j = -1 * (a[0] * b[2] - a[2] * b[0]);
     let k = a[0] * b[1] - a[1] * b[0];
 
-    let v3 = new Vector3([i, j, k]); // Modify this line to calculate cross product between other1 and other2.
-
-    // Don't delete the return statement.
-    return v3;
-  }
+    return new Vector3([i, j, k]);
+}
 
   /**
    * Calculate the magnitude (or length) of this vector.
