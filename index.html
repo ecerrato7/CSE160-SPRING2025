@@ -1,57 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Change a point color</title>
-  </head>
+<head>
+  <meta charset="utf-8" />
+  <title>Change a Point Color</title>
+</head>
 
-  <body onload="main()">
-    <canvas id="webgl" width="400" height="400">
-    Please use a browser that supports "canvas"
-    </canvas>
-    <p>
+<body onload="main()">
+  <canvas id="webgl" width="800" height="800">
+    Please use a browser that supports "canvas".
+  </canvas>
 
-    <div>
-        <button id = "Clear">Clear </button>
-        <button id =  "Cube">Cube</button>
-    </div>
-   
-    <div id="numdot"></div>
-  
-    <div>
-      Start Animation <button id = "Start Animation">Start Animation</button>  
-      <div>
-      Stop Animation <button id = "Stop Animation">Stop Animation</button>
-      <br/><br/>
-        <div> </div>
-          Control Magenta
-          <br/><br/>
-          <div> </div>
-          <label>Magenta Part Angle: <input type="range" id="magentaAngleSlider" min="-180" max="180"></label><br>
-          <label>Magenta Part Scale: <input type="range" id="magentaScaleSlider" min="50" max="200"></label><br>
-      </div>
-    </div>
-    <br/><br/>
-    
-    Rotate <input type="range" id="angleSlider" min="0" max="360">
+  <div id="numdot"></div>
   <br/><br/>
-  <button id="FrontView">Front View</button>
-  <button id="TopView">Top View</button>
-  <button id="RightView">Right View</button>
+  <div>
+    Performance: 
+    FPS: <span id="fps">0</span><br>
+    MS: <span id="ms">0</span> ms
+  </div>
+  <div>
+    <label>
+      Magenta
+      <input type="range" id="magentaSlide" min="-180" max="180">
+    </label>
+    Animation
+    <button id="animationMagentaOnButton">On</button>
+    <button id="animationMagentaOffButton">Off</button>
+    <br/>
 
+    <label>
+      Yellow
+      <input type="range" id="yellowSlide" min="-180" max="180">
+    </label>
+    Animation
+    <button id="animationYellowOnButton">On</button>
+    <button id="animationYellowOffButton">Off</button>
+    <br/><br/>
+    <br/><br/>
+    Controls: W- move forward , A- Move left, S-Move Back, D-Move Right
+    Q-Pan Left , E- Pan Right
+    X- Place Block Down, C-Delete Block,
+    Y-Move Up, U-Move Down
+    
+    Click and Drag to rotate
+    <br/><br/>
+    Story:
+    <br/><br/>
+    A wolf has appear in front of the shepherd create a wall to protect him and his herd of sheep.
+    <label>
+      Camera Angle
+      <input type="range" id="angleSlide" min="-180" max="180">
+      <br/><br/>
+      Camera Speed
+      <input type="range" id="speedSlider" min="0.01" max="1" step="0.01" value="0.1">
+      <br/><br/>
+      <button id="resetButton">Reset Camera</button>
+
+    </label>
+  </div>
+  <div id="cameraPosition" style="position: absolute; top: 10px; left: 10px; color: white; background: rgba(0, 0, 0, 0.5); padding: 10px;">
+</div>
+  <br/><br/>
+
+
+  <script src="lib/webgl-utils.js"></script>
+  <script src="lib/webgl-debug.js"></script>
+  <script src="lib/cuon-utils.js"></script>
+  <script src="lib/stats.js"></script>
+  <script src="lib/cuon-matrix-cse160.js"></script>
+  <script src="src/Point.js"></script>
+  <script src="src/sunflower.js" ></script>
+  <script src="src/Triangle.js"></script>
+  <script src="src/Circle.js"></script>
+  <script src="src/Cube.js"></script>
+  <script src="src/blocks.js"></script>
+  <script src = "baskeball.js" ></script>
+  <script src = "src/herd.js" ></script>
+  <script src="src/Camera.js"></script>
   
-  </p>
-
-    <script src="CSE160ASGN2/lib/webgl-utils.js"></script>
-    <script src="CSE160ASGN2/lib/webgl-debug.js"></script>
-    <script src="CSE160ASGN2/lib/cuon-utils.js"></script>
-    <script src="CSE160ASGN2/lib/stats.js"></script>
-    <script src="CSE160ASGN2/src/Blocky.js"></script>
-    <script src="CSE160ASGN2/src/Point.js"></script>
-    <script src="CSE160ASGN2/src/Triangle.js"></script>
-    <script src="CSE160ASGN2/src/Circle.js"></script>
-    <script src="CSE160ASGN2/src/Cube.js"></script>
-    <script src="CSE160ASGN2/lib/cuon-matrix-cse160.js"></script>
-    <script src="CSE160ASGN2/src/baskeball.js"></script>
-  </body>
+  <script src="World.js"></script>
+</body>
 </html>

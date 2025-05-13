@@ -6,14 +6,17 @@
 </head>
 
 <body onload="main()">
-  <canvas id="webgl" width="400" height="400">
+  <canvas id="webgl" width="800" height="800">
     Please use a browser that supports "canvas".
   </canvas>
 
   <div id="numdot"></div>
   <br/><br/>
-  performance   FPS: <span id="fps">0</span><br>
-  ms: <span id="ms">0</span> ms
+  <div>
+    Performance: 
+    FPS: <span id="fps">0</span><br>
+    MS: <span id="ms">0</span> ms
+  </div>
   <div>
     <label>
       Magenta
@@ -32,7 +35,21 @@
     <button id="animationYellowOnButton">On</button>
     <button id="animationYellowOffButton">Off</button>
     <br/><br/>
-
+    <div>
+      <label>
+        Left Arm Animation:
+        <button id="leftArmAnimationOn">On</button>
+        <button id="leftArmAnimationOff">Off</button>
+      </label>
+      <br/><br/>
+    
+      <label>
+        Right Arm Animation:
+        <button id="rightArmAnimationOn">On</button>
+        <button id="rightArmAnimationOff">Off</button>
+      </label>
+      <br/><br/>
+    </div>
     <label>
       Camera Angle
       <input type="range" id="angleSlide" min="-180" max="180">
@@ -44,9 +61,24 @@
 
     </label>
   </div>
+  <div id="cameraPosition" style="position: absolute; top: 10px; left: 10px; color: white; background: rgba(0, 0, 0, 0.5); padding: 10px;">
+</div>
+  <br/><br/>
+  <br/><br/>
+  Controls: W- move forward , A- Move left, S-Move Back, D-Move Right
+  <br/><br/>
+  Q-Pan Left , E- Pan Right
+  <br/><br/>
+  X- Place Block Down, C-Delete Block,
+  <br/><br/>
+  Y-Move Up, U-Move Down
+  <br/><br/>
+  Click and Drag to rotate
 
   <br/><br/>
-
+  Story:
+  <br/><br/>
+  A wolf has appear in front of the shepherd create a wall to protect him and his herd of sheep.
   <!-- WebGL and App Scripts -->
   <script src="../lib/webgl-utils.js"></script>
   <script src="../lib/webgl-debug.js"></script>
@@ -54,10 +86,15 @@
   <script src="../lib/stats.js"></script>
   <script src="../lib/cuon-matrix-cse160.js"></script>
   <script src="Point.js"></script>
+  <script src="sunflower.js" ></script>
   <script src="Triangle.js"></script>
   <script src="Circle.js"></script>
   <script src="Cube.js"></script>
+  <script src="blocks.js"></script>
+  <script src = "baskeball.js" ></script>
+  <script src = "herd.js" ></script>
   <script src="Camera.js"></script>
+  
   <script src="World.js"></script>
 </body>
 </html>
