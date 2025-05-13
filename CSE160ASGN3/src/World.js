@@ -305,7 +305,7 @@ function initTextures() {
     gl.uniform1i(u_Sampler2,2);
     gl.uniform1i(u_Sampler3,3);
     gl.uniform1i(u_Sampler4,4);
-    gl.uniform1i(u_Sampler4,5);
+    gl.uniform1i(u_Sampler5,5);
   }
   
 
@@ -685,7 +685,7 @@ function drawScene() {
     sky.color = [1.0, 1.0, 1.0, 1.0]; // White color (texture will override this)
     sky.textureNum = 1; // Use texture unit 1 (sky texture)
     sky.matrix = skyboxMatrix;
-    gl.uniform1i(u_whichTexture, 1); // Set texture to sky
+    //gl.uniform1i(u_whichTexture, 1); // Set texture to sky
     sky.render();
 
   //createValleyOfFlowers();
@@ -706,7 +706,7 @@ function drawScene() {
    var yellow = new Cube();
 
    yellow.color = [1.0, 1.0, 0.0, 1.0];
-   //yellow.textureNum = 4;
+   yellow.textureNum = 5;
    yellow.matrix.setTranslate(0,-.5, 0);
    yellow.matrix.rotate(-5 , 1 , 0, 0);
    yellow.matrix.rotate(-g_yellowAngle, 0, 0, 1);
@@ -732,6 +732,7 @@ function drawScene() {
    // Render the left arm
    const leftArm = new Cube();
    leftArm.color = [1.0, 0.0, 0.0, 1.0]; // Red color
+   leftArm.textureNum = 5;
    leftArm.matrix = new Matrix4(yellowCoordinatesMat); // Attach to magenta arm
    leftArm.matrix.translate(0, .5, -.1); // Attach to the left side of the body
    leftArm.matrix.rotate(g_leftArmAngle, 0, 0, 1); // Animate the arm
@@ -741,6 +742,7 @@ function drawScene() {
    // Render the right arm
    const rightArm = new Cube();
    rightArm.color = [0.0, 0.0, 1.0, 1.0]; // Blue color
+   rightArm.textureNum = 5;
    rightArm.matrix = new Matrix4(yellowCoordinatesMat);  
    rightArm.matrix.translate(0, .5 , .45);  
    rightArm.matrix.rotate(-g_rightArmAngle, 0, 0, 1);  
@@ -757,7 +759,7 @@ function drawScene() {
     predator.textureNum = 3; // Use wolf.jpg texture
     predator.matrix.setTranslate(predatorPosition.elements[0], predatorPosition.elements[1], predatorPosition.elements[2]);
     predator.matrix.scale(0.5, 0.5, 0.5);
-    gl.uniform1i(u_whichTexture, 3); // Bind the wolf texture
+    //gl.uniform1i(u_whichTexture, 3); // Bind the wolf texture
     predator.render();
 
 }
