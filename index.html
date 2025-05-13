@@ -35,17 +35,21 @@
     <button id="animationYellowOnButton">On</button>
     <button id="animationYellowOffButton">Off</button>
     <br/><br/>
-    <br/><br/>
-    Controls: W- move forward , A- Move left, S-Move Back, D-Move Right
-    Q-Pan Left , E- Pan Right
-    X- Place Block Down, C-Delete Block,
-    Y-Move Up, U-Move Down
+    <div>
+      <label>
+        Left Arm Animation:
+        <button id="leftArmAnimationOn">On</button>
+        <button id="leftArmAnimationOff">Off</button>
+      </label>
+      <br/><br/>
     
-    Click and Drag to rotate
-    <br/><br/>
-    Story:
-    <br/><br/>
-    A wolf has appear in front of the shepherd create a wall to protect him and his herd of sheep.
+      <label>
+        Right Arm Animation:
+        <button id="rightArmAnimationOn">On</button>
+        <button id="rightArmAnimationOff">Off</button>
+      </label>
+      <br/><br/>
+    </div>
     <label>
       Camera Angle
       <input type="range" id="angleSlide" min="-180" max="180">
@@ -60,12 +64,30 @@
   <div id="cameraPosition" style="position: absolute; top: 10px; left: 10px; color: white; background: rgba(0, 0, 0, 0.5); padding: 10px;">
 </div>
   <br/><br/>
+  <br/><br/>
+  Controls: W- move forward , A- Move left, S-Move Back, D-Move Right
+  <br/><br/>
+  Q-Pan Left , E- Pan Right
+  <br/><br/>
+  X- Place Block Down, C-Delete Block,
+  <br/><br/>
+  Y-Move Up, U-Move Down
+  <br/><br/>
+  Click and Drag to rotate
 
-CSE160ASGN3/
+  <br/><br/>
+  Story:
+  <br/><br/>
+  A wolf has appear in front of the shepherd create a wall to protect him and his herd of sheep.
+  <!-- WebGL and App Scripts -->
+
   <script src="CSE160ASGN3/lib/webgl-utils.js"></script>
   <script src="CSE160ASGN3/lib/webgl-debug.js"></script>
   <script src="CSE160ASGN3/lib/cuon-utils.js"></script>
   <script src="CSE160ASGN3/lib/stats.js"></script>
+
+
+
   <script src="CSE160ASGN3/lib/cuon-matrix-cse160.js"></script>
   <script src="CSE160ASGN3/src/Point.js"></script>
   <script src="CSE160ASGN3/src/sunflower.js" ></script>
@@ -76,7 +98,7 @@ CSE160ASGN3/
   <script src = "CSE160ASGN3/src/baskeball.js" ></script>
   <script src = "CSE160ASGN3/src/herd.js" ></script>
   <script src="CSE160ASGN3/src/Camera.js"></script>
-  
+
   <script src="CSE160ASGN3/src/World.js"></script>
 </body>
 </html>
