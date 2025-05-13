@@ -294,9 +294,8 @@ function initTextures() {
 function initTextures() {
   loadTexture('CSE160ASGN3/src/grass.jpg', 0); // Grass texture
   loadTexture('CSE160ASGN3/src/sky.jpg', 1);   // Sky texture
-  oadTexture('CSE160ASGN3/src/sheep.jpg', 2); // Sheep texture
   loadTexture('CSE160ASGN3/src/wolf.jpg', 3);  // Wolf texture
-  l
+  loadTexture('CSE160ASGN3/src/sheep.jpg', 2); // Sheep texture
   loadTexture('CSE160ASGN3/src/iron.jpg', 4);  // Iron texture
 }
 
