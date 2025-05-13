@@ -282,11 +282,21 @@ document.getElementById('speedSlider').addEventListener('input', function () {g_
   }
   
 // for indexhtml
+/*
+function initTextures() {
+  loadTexture('grass.jpg', 0); // Load grass texture into texture unit 0
+  loadTexture('sky.jpg', 1);  // Load sky texture into texture unit 1
+  loadTexture('sheep.jpg', 2); // Load stone texture into texture unit 2
+  loadTexture('wolf.jpg',3);
+  loadTexture('meteor.jpg',4);
+}
+  */
 function initTextures() {
   loadTexture('CSE160ASGN3/src/grass.jpg', 0); // Grass texture
   loadTexture('CSE160ASGN3/src/sky.jpg', 1);   // Sky texture
-  loadTexture('CSE160ASGN3/src/wolf.jpg', 2);  // Wolf texture
-  loadTexture('CSE160ASGN3/src/sheep.jpg', 3); // Sheep texture
+  oadTexture('CSE160ASGN3/src/sheep.jpg', 2); // Sheep texture
+  loadTexture('CSE160ASGN3/src/wolf.jpg', 3);  // Wolf texture
+  l
   loadTexture('CSE160ASGN3/src/iron.jpg', 4);  // Iron texture
 }
 
