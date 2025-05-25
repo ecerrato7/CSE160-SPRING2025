@@ -4,8 +4,9 @@ class Camera {
         this.at = new Vector3([0, 0, -100]);
         this.up = new Vector3([0, 1, 0]);
         this.speed = 0.1;
-        this.yaw = 0; // Horizontal rotation
-        this.pitch = 0; // Vertical rotation
+        const dir = this.at.sub(this.eye).normalize();
+        this.yaw = Math.atan2(dir.elements[0], dir.elements[2]) * 180 / Math.PI;
+        this.pitch = Math.asin(dir.elements[1]) * 180 / Math.PI;
     }
 
     reset() {
@@ -95,8 +96,8 @@ class Camera {
         ]); // Update the "at" vector based on the forward direction
     
         // Debugging: Log the updated "at" and "eye" vectors
-        console.log('updateAt called');
-        console.log(`Camera Position (eye): [${this.eye.elements[0].toFixed(2)}, ${this.eye.elements[1].toFixed(2)}, ${this.eye.elements[2].toFixed(2)}]`);
-        console.log(`Camera Target (at): [${this.at.elements[0].toFixed(2)}, ${this.at.elements[1].toFixed(2)}, ${this.at.elements[2].toFixed(2)}]`);
+      //  console.log('updateAt called');
+       // console.log(`Camera Position (eye): [${this.eye.elements[0].toFixed(2)}, ${this.eye.elements[1].toFixed(2)}, ${this.eye.elements[2].toFixed(2)}]`);
+        //console.log(`Camera Target (at): [${this.at.elements[0].toFixed(2)}, ${this.at.elements[1].toFixed(2)}, ${this.at.elements[2].toFixed(2)}]`);
     }
 }
