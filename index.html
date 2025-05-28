@@ -6,15 +6,25 @@
 </head>
 
 <body onload="main()">
-  <canvas id="webgl" width="800" height="800">
+  <canvas id="webgl" width="1000" height="800">
     Please use a browser that supports "canvas".
   </canvas>
 
   <div id="numdot"></div>
+    <br/><br/>
+    <button id="lightAnimOn">Light Animate On</button>
+<button id="lightAnimOff">Light Animate Off</button>
+    <br/><br/>
+    Light X <input type="range" id="lightSlideX" min="-250" max="1000"   class = "slider" value="0">
+    Light Y <input type="range" id="lightSlideY" min="-250" max="1000"   class = "slider" value="100">
+    Light Z <input type="range" id="lightSlideZ" min="-250" max="1000"   class = "slider" value="-200">
   <br/><br/>
      <button id = "normalOn">Normal On</button>
    <button id = "normalOff">Normal Off</button>
      <br/><br/>
+    <button id="lightOnBtn">Light On</button>
+    <button id="lightOffBtn">Light Off</button>
+          <br/><br/>
   <div>
     Performance: 
     FPS: <span id="fps">0</span><br>
@@ -82,19 +92,18 @@
   <br/><br/>
   Story:
   <br/><br/>
-  A wolf has appear in front of the youn a ,shepherd,  create a wall to protect him and his herd of sheep.
-  <br/><br/>
-  The iron knight in front you forgot his sword is freaking out!
+  Look Up in the sky
+    <br/><br/>
   <!-- WebGL and App Scripts -->
-
+  
   <script src="CSE160ASGN4/lib/webgl-utils.js"></script>
   <script src="CSE160ASGN4/lib/webgl-debug.js"></script>
   <script src="CSE160ASGN4/lib/cuon-utils.js"></script>
   <script src="CSE160ASGN4/lib/stats.js"></script>
-
-
-
+  <script src="CSE160ASGN4/lib/OBJLOADER.js"></script>
+   
   <script src="CSE160ASGN4/lib/cuon-matrix-cse160.js"></script>
+  <script src="CSE160ASGN4/src/shader.js"></script>
   <script src="CSE160ASGN4/src/Point.js"></script>
   <script src="CSE160ASGN4/src/sunflower.js" ></script>
   <script src="CSE160ASGN4/src/Triangle.js"></script>
@@ -104,6 +113,7 @@
   <script src = "CSE160ASGN4/src/baskeball.js" ></script>
   <script src = "CSE160ASGN4/src/herd.js" ></script>
   <script src="CSE160ASGN4/src/Camera.js"></script>
+   <script src="CSE160ASGN4/lib/obj.js"></script>
 
   <script src="CSE160ASGN4/src/World.js"></script>
 </body>

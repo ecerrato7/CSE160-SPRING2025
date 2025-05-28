@@ -1,77 +1,19 @@
-// Vertex shader program h
-var VSHADER_SOURCE =  `
-  precision mediump float;
-  attribute vec4 a_Position;
-  attribute vec2 a_UV;
-  varying vec2 v_UV;
-  uniform mat4 u_ModelMatrix;
-  uniform mat4 u_GlobalRotateMatrix;
-  uniform mat4 u_ProjectionMatrix;
-  uniform mat4 u_ViewMatrix;
-  attribute vec3 a_Normal;
-  varying vec3 v_Normal;
 
-  void main() {
-    gl_Position = u_ProjectionMatrix * u_ViewMatrix * u_GlobalRotateMatrix * u_ModelMatrix * a_Position;
-    v_UV = a_UV;
-    v_Normal = a_Normal;
-    }
-`;
-
-// Fragment shader program
-var FSHADER_SOURCE = `
-  precision mediump float;
-  varying vec2 v_UV;
-  varying vec3 v_Normal;
-  uniform vec4 u_FragColor;
-  uniform sampler2D u_Sampler0;
-  uniform sampler2D u_Sampler1;
-  uniform sampler2D u_Sampler2;
-  uniform sampler2D u_Sampler3;
-  uniform sampler2D u_Sampler4;
-  uniform sampler2D u_Sampler5;
-  uniform int u_whichTexture;
-
-   void main() {
-    if (u_whichTexture == -2) {
-        gl_FragColor = u_FragColor;
-    } else if (u_whichTexture == -1) {
-        gl_FragColor = vec4(v_UV, 1.0, 1.0);
-    } else if (u_whichTexture == 0) {
-        gl_FragColor = texture2D(u_Sampler0, v_UV); // Grass texture
-    } else if (u_whichTexture == 1) {
-        gl_FragColor = texture2D(u_Sampler1, v_UV); // Sky texture
-    } else if (u_whichTexture == 2) {
-    gl_FragColor = texture2D(u_Sampler2, v_UV); // Sheep texture
-    } else if (u_whichTexture == 3) {
-    gl_FragColor = texture2D(u_Sampler3, v_UV); // Wolf texture
-      } else if (u_whichTexture == 4) {
-    gl_FragColor = texture2D(u_Sampler4, v_UV); // meteor texture
-      
-     } else if (u_whichTexture == 5) {
-    gl_FragColor = texture2D(u_Sampler4, v_UV); // meteor texture
-      } else if (u_whichTexture == 6) {
-    gl_FragColor = vec4((v_Normal+1.0)/2.0, 1.0); // Default red color
-      }
-    else {
-        gl_FragColor = vec4(1,.2,.2, 1.0); // Default red color
-      }
-
-}
-`;
 
  //gl_FragColor = u_FragColor;
     //gl_FragColor = vec4(v_UV, 0.0, 1.0);
     //gl_FragColor = texture2D(u_Sampler0, v_UV);
 // Global Variables
 let canvas;
-
+let g_objModel = null;
+let g_dragonShape = null;
+let u_cameraPos;
 let gl;
 let a_Position;
 let a_UV;
 let u_FragColor; 
 let u_Size;
-let u_ModelMatrix ;
+let u_ModelMatrix;
 let u_ProjectionMatrix;
 let u_ViewMatrix;
 let u_GlobalRotateMatrix;
@@ -82,6 +24,12 @@ let u_whichTexture;
 let u_Sampler3;
 let u_Sampler4;
 let u_Sampler5;
+let u_lightPos;
+let u_lightOn;
+let g_lightOn;
+let a_Normal;
+let u_lightColor;
+
 
 function setupWebGL() {
   canvas = document.getElementById('webgl');  
@@ -99,15 +47,18 @@ function setupWebGL() {
   console.log('WebGL context initialized:', gl);
 }
 
-
+ 
 
 
   
   function connectVariablesToGLSL() {
+
+    
     if (!initShaders( gl, VSHADER_SOURCE  , FSHADER_SOURCE)) {
       console.error('Failed to initialize shaders.');
       return;
     }
+
 
     a_Position = gl.getAttribLocation(gl.program, 'a_Position');
     if (a_Position < 0 ) {
@@ -120,8 +71,16 @@ function setupWebGL() {
         return;
     }
 
-
-
+    u_lightPos = gl.getUniformLocation(gl.program, 'u_lightPos');
+    if (!u_lightPos) {
+        console.error('Failed to get the storage location of u_lightPos');
+        return;
+    }
+    u_lightOn = gl.getUniformLocation(gl.program, 'u_lightOn');
+    if (!u_lightOn) {
+        console.error('Failed to get the storage location of u_lightOn');
+        return;
+    }
 
     a_UV = gl.getAttribLocation(gl.program, 'a_UV');
     if (a_UV < 0 ) {
@@ -195,6 +154,15 @@ if (!u_Sampler4) {
     console.error('Failed to get the storage location of u_Sampler4');
     return;
 }
+
+
+    gl.program.a_Position = a_Position;
+gl.program.a_Normal = a_Normal;
+gl.program.u_ModelMatrix = u_ModelMatrix;
+gl.program.u_FragColor = u_FragColor;
+ 
+
+
     console.log('a_Position:', a_Position);
 console.log('u_ModelMatrix:', u_ModelMatrix);
 console.log('u_ProjectionMatrix:', u_ProjectionMatrix);
@@ -214,6 +182,7 @@ console.log('u_ViewMatrix:', u_ViewMatrix);
   const TRIANGLE =1;
   const CUBE = 2;
   //Globals related UI elements 
+  let g_lightSliderOffset = [0, 0, 0];
   let g_selectedColor = [1.0, 1.0, 1.0, 1.0];
   let g_selectedSize = 5;
   let g_selectedType = POINT;
@@ -223,14 +192,34 @@ console.log('u_ViewMatrix:', u_ViewMatrix);
   g_yellowAnimation = false;
   g_magentaAnimation = false;
   let g_normalOn = false; // Normal texture toggle
-  let g_lightPos = [0, 1, -2]; // Light position
+  let g_lightPos = [0, -1, -2]; // Light position
+ 
 
   function addActionForHTMLUI() {
 
+
+    document.getElementById('lightAnimOn').onclick = function() { g_lightAnimated = true; };
+document.getElementById('lightAnimOff').onclick = function() { g_lightAnimated = false; };
+    document.getElementById('lightOnBtn').onclick = function() {
+    g_lightOn = true;
+    renderAllShapes();
+};
+document.getElementById('lightOffBtn').onclick = function() {
+    g_lightOn = false;
+    renderAllShapes();
+};
     document.getElementById('normalOn').onclick = function() { g_normalOn = true; renderAllShapes(); };
     document.getElementById('normalOff').onclick = function() { g_normalOn = false; renderAllShapes(); };
 
-    document.getElementById('light')
+   document.getElementById('lightSlideX').addEventListener('mousemove', function(ev){
+  if (ev.buttons == 1) {g_lightSliderOffset[0] = this.value/100; renderAllShapes(); }
+});
+document.getElementById('lightSlideY').addEventListener('mousemove', function(ev){
+  if (ev.buttons == 1) { g_lightSliderOffset[1] = this.value/100; renderAllShapes(); }
+});
+document.getElementById('lightSlideZ').addEventListener('mousemove', function(ev){
+  if (ev.buttons == 1) { g_lightSliderOffset[2] = this.value/100; renderAllShapes(); }
+});
 
     document.getElementById('animationYellowOffButton').onclick = function() { g_yellowAnimation = false; g_yellowAngle = 0;renderAllShapes();}
     document.getElementById('animationYellowOnButton').onclick = function() { g_yellowAnimation = true; g_yellowAngle = 0;renderAllShapes();}
@@ -304,7 +293,7 @@ document.getElementById('speedSlider').addEventListener('input', function () {g_
   }
   
 // for indexhtml
-/*
+
 function initTextures() {
   loadTexture('grass.jpg', 0); // Load grass texture into texture unit 0
   loadTexture('sky.jpg', 1);  // Load sky texture into texture unit 1
@@ -312,13 +301,14 @@ function initTextures() {
   loadTexture('wolf.jpg',3);
   loadTexture('meteor.jpg',4);
 }
-  */
+  
 function initTextures() {
-  loadTexture('CSE160ASGN3/src/grass.jpg', 0); // Grass texture
-  loadTexture('CSE160ASGN3/src/sky.jpg', 1);   // Sky texture
-  loadTexture('CSE160ASGN3/src/wolf.jpg', 3);  // Wolf texture
-  loadTexture('CSE160ASGN3/src/sheep.jpg', 2); // Sheep texture
-  loadTexture('CSE160ASGN3/src/iron.jpg', 4);  // Iron texture
+  loadTexture('CSE160ASGN4/src/grass.jpg', 0); // Grass texture
+  loadTexture('CSE160ASGN4/src/sky.jpg', 1);   // Sky texture
+  loadTexture('CSE160ASGN4/src/wolf.jpg', 3);  // Wolf texture
+  loadTexture('CSE160ASGN4/src/sheep.jpg', 2); // Sheep texture
+  loadTexture('CSE160ASGN4/src/meteor.jpg', 4);  // Iron texture
+  
 }
 
   function bindSamplers() {
@@ -341,11 +331,11 @@ function initTextures() {
 }
   function main() {
     setupWebGL(); // Initialize the canvas and WebGL context
+   
     connectVariablesToGLSL();
     addActionForHTMLUI();
+     dragon = new Model(gl, "CSE160ASGN4/bunny.obj");
     
-
-    initializeFlowerPositions(10, 20, 10); // 10 flowers, floor width 20, floor depth 10
     initializeHerd(); // Initialize the herd of baby animals
     canvas.onmousedown = handleMouseDown;
     canvas.onmouseup = handleMouseUp;
@@ -356,12 +346,14 @@ function initTextures() {
     initTextures();
     bindSamplers();  
     gl.clearColor(0.0, 0.0, 0.0, 1.0);
-   
+    
+    // loadAndParseOBJ();
+  
     requestAnimationFrame(tick);
 }
 
-var g_secpmds = performance.now() / 1000.0;
-
+var g_seconds = performance.now() / 1000.0;
+let g_lightAnimated = false
 function updateAnimationAngles() {
   if (g_yellowAnimation) {
       g_yellowAngle = 45 * Math.sin(g_seconds);  
@@ -375,7 +367,18 @@ function updateAnimationAngles() {
   if (g_rightArmAnimation) {
       g_rightArmAngle = 45 * Math.sin(g_seconds);  
   }
-  g_lightPos[0] = cos(g_seconds);
+ const radius =3;
+  if (g_lightAnimated) {
+    g_lightPos[0] = radius * Math.cos(g_seconds*2) + g_lightSliderOffset[0];
+    g_lightPos[1] = Math.cos(g_seconds * 2) + g_lightSliderOffset[1];
+    g_lightPos[2] = radius * Math.sin(g_seconds*2) + g_lightSliderOffset[2];
+  } else {
+    g_lightPos[0] = g_lightSliderOffset[0];
+    g_lightPos[1] = g_lightSliderOffset[1];
+    g_lightPos[2] = g_lightSliderOffset[2];
+  }
+
+ 
 }
 
   const keyActions = {
@@ -496,44 +499,15 @@ document.addEventListener('keydown', (event) => {
         //clear the canvas
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.clear(gl.COLOR_BUFFER_BIT);
-        //blockManager.renderBlocks();
+        
         drawScene();
-      
 
-        drawMap();
+
+       // drawMap();
          // Render the basketball
-   
-      
 
-    } 
-    
-    function renderBall() {
-      const ball = new Sphere(0.2, 30, 30); // Create a sphere for the ball
-      ball.textureNum = 2; // Use sheep.jpg texture
-      ball.matrix.setTranslate(ballPosition.elements[0], ballPosition.elements[1], ballPosition.elements[2]);
-      ball.render();
-  }
 
-    function drawCursor() {
-      const cursorSize = 1; // Size of the crosshair
-      const cursorColor = [1.0, 0.0, 0.0, 1.0]; // Red color for the crosshair
-  
-      // Horizontal line
-      const horizontalLine = new Cube();
-      horizontalLine.color = cursorColor;
-      horizontalLine.matrix.setIdentity();
-      horizontalLine.matrix.translate(-cursorSize / 2, 0, 0);
-      horizontalLine.matrix.scale(cursorSize, 0.002, 0.002); // Thin horizontal line
-      horizontalLine.render();
-  
-      // Vertical line
-      const verticalLine = new Cube();
-      verticalLine.color = cursorColor;
-      verticalLine.matrix.setIdentity();
-      verticalLine.matrix.translate(0, -cursorSize / 2, 0);
-      verticalLine.matrix.scale(0.002, cursorSize, 0.002); // Thin vertical line
-      verticalLine.render();
-  }
+    }
     
 
 
@@ -551,27 +525,6 @@ document.addEventListener('keydown', (event) => {
           }
       }
   }
-
- /* function updateCameraPositionDisplay() {
-    const eye = g_camera.eye.elements;
-    const at = g_camera.at.elements;
-
-    // Debugging: Log the camera position and target
-   // console.log('updateCameraPositionDisplay called');
-    //console.log(`Camera Position (eye): [${eye[0].toFixed(2)}, ${eye[1].toFixed(2)}, ${eye[2].toFixed(2)}]`);
-    //console.log(`Camera Target (at): [${at[0].toFixed(2)}, ${at[1].toFixed(2)}, ${at[2].toFixed(2)}]`);
-
-    // Update the UI element (if added)
-    const cameraPositionElement = document.getElementById('cameraPosition');
-    if (cameraPositionElement) {
-        cameraPositionElement.innerText = `
-            Camera Position (eye): [${eye[0].toFixed(2)}, ${eye[1].toFixed(2)}, ${eye[2].toFixed(2)}]
-            Camera Target (at): [${at[0].toFixed(2)}, ${at[1].toFixed(2)}, ${at[2].toFixed(2)}]
-        `;
-    }
-}
-*/
-
 let isMouseDown = false; // Tracks whether the mouse button is pressed
 let lastMouseX = 0; // Stores the last X position of the mouse
 let lastMouseY = 0; // Stores the last Y position of the mouse
@@ -688,45 +641,72 @@ function handleSpacePress() {
   ground.matrix.scale(2, .1, 2);
   ground.render();
 */
+
 function drawScene() {
+    gl.uniform3f(u_lightPos, g_lightPos[0], g_lightPos[1], g_lightPos[2]); // Set light position
+    gl.uniform3f(u_cameraPos, g_camera.eye.elements[0], g_camera.eye.elements[1], g_camera.eye.elements[2]); // Set camera position
+    gl.uniform1i(u_lightOn, g_lightOn);
+
+
+  var light = new Cube();
+  light.color = [2,2,0,1];  
+  light.matrix.translate(g_lightPos[0], g_lightPos[1], g_lightPos[2]); // Position the light
+  light.matrix.scale(0.1, 0.1, 0.1); // Scale the light cube
+  light.matrix.translate(-1,2,-1.5);
+  light.render(); // Render the light
+  //dragon render
+          if (dragon && dragon.loaded) {
+          
+  dragon.color = [1.0, 0, 1.0, 1.0];
+  //dragon.textureNum = 3; // Set to normal texture
+  dragon.matrix.setIdentity();
+
+   
+  dragon.matrix.translate(-.5, -0.5, 0 ); // Position the dragon
+    dragon.matrix.scale(.1, .1,.1 ); // Try 0.5 or smaller
+    if(g_normalOn) { dragon.textureNum = -3; } // Use normal texture if enabled
+  //gl.uniform1i(u_whichTexture, 3); 
+ 
+  dragon.matrix.rotate(0, 0, 1, 0);
+  
+  dragon.render(gl, gl.program);
+}
+
+
+
   // Render the floor
-  const floorMatrix = new Matrix4();
-  floorMatrix.translate(0, -0.75, 0.0);
-  floorMatrix.scale(40, -1, 40);
-  floorMatrix.translate(-0.5, 0, -0.5);
-  var floorMatrixcoordinates = new Matrix4(floorMatrix.matrix);
-  const floor = new Cube();
+  var  floor  = new Cube();
+  floor.matrix.translate(0, -0.75, 0.0);
+  floor.matrix.scale(40, -1, 40);
+  floor.matrix.translate(-0.5, 0, -0.5);
   floor.color = [1.0, 1.0, 1.0, 1.0]; // White color (texture will override this)
   floor.textureNum = 0; // Use texture unit 0 (grass texture)
-  floor.matrix = floorMatrix;
   gl.uniform1i(u_whichTexture, 0); // Set texture to grass
   floor.render();
 
  
     var sky = new Cube();
     sky.color = [.8, .8, .8, 1.0]; // White color (texture will override this)
-    if(g_normalOn) { sky.textureNum = 6; } // Use normal texture if enabled
-   // sky.textureNum = 1; // Use texture unit 1 (sky texture)
-   sky.matrix.scale(10, 10, 10);
+    if(g_normalOn) { sky.textureNum = -3; } // Use normal texture if enabled
+   sky.textureNum = 1; // Use texture unit 1 (sky texture)
+   sky.matrix.scale(20, 20, 20);
    sky.matrix.translate(-0.5, -0.5, -0.5);
  
-   //gl.uniform1i(u_whichTexture, 1); // Set texture to sky
+   gl.uniform1i(u_whichTexture, 1); // Set texture to sky
  
   sky.render();
  
+  // After OBJLoader has loaded the model:
  
-  //createValleyOfFlowers();
-
-
-
    //draw the body cube 
    var body = new Cube();
    body.color = [1.0, 1.0, 1.0, 1.0];
    //body.textureNum = 0;
-   if(g_normalOn) { body.textureNum = 6; } // Use normal texture if enabled
+   if(g_normalOn) { body.textureNum = -3; } // Use normal texture if enabled
    body.matrix.translate(-0.25, -.75, 0.0);
    body.matrix.rotate(-5,1,0,0);
    body.matrix.scale(0.5, 0.3, 0.5);
+   body.normalMatrix.setInverseOf(body.matrix).transpose(); // Update the normal matrix 
    body.render();
 
 
@@ -734,7 +714,7 @@ function drawScene() {
    var yellow = new Cube();
 
    yellow.color = [1.0, 1.0, 0.0, 1.0];
-   if(g_normalOn) { yellow.textureNum = 6; }
+   if(g_normalOn) { yellow.textureNum = -3; }
    //yellow.textureNum = 5;
    yellow.matrix.setTranslate(0,-.5, 0);
    yellow.matrix.rotate(-5 , 1 , 0, 0);
@@ -742,6 +722,7 @@ function drawScene() {
    var yellowCoordinatesMat = new Matrix4(yellow.matrix);
    yellow.matrix.scale(0.25, .7 ,.5);
    yellow.matrix.translate(-0.5, 0, 0);
+   yellow.normalMatrix.setInverseOf(yellow.matrix).transpose(); // Update the normal matrix
    yellow.render();
 
 
@@ -749,7 +730,7 @@ function drawScene() {
       //Magenta arm
       var magenta = new Cube();
       magenta.color = [1.0, 0.0, 1.0, 1.0];
-      if(g_normalOn) { magenta.textureNum = 6; }
+      if(g_normalOn) { magenta.textureNum = -3; }
       //magenta.textureNum = 5;
       magenta.matrix = new Matrix4(yellowCoordinatesMat); // Attach to yellow arm
       magenta.matrix.translate(0,0.65,.1);
@@ -763,7 +744,7 @@ function drawScene() {
    const leftArm = new Cube();
    
    leftArm.color = [1.0, 0.0, 0.0, 1.0]; // Red color
-   if(g_normalOn) { leftArm.textureNum = 6; } // Use normal texture if enabled
+   if(g_normalOn) { leftArm.textureNum = -3; } // Use normal texture if enabled
    //leftArm.textureNum = 5;
    leftArm.matrix = new Matrix4(yellowCoordinatesMat); // Attach to magenta arm
    leftArm.matrix.translate(0, .5, -.1); // Attach to the left side of the body
@@ -774,7 +755,7 @@ function drawScene() {
    // Render the right arm
    const rightArm = new Cube();
    rightArm.color = [0.0, 0.0, 1.0, 1.0]; // Blue color
-   if(g_normalOn) { rightArm.textureNum = 6; } // Use normal texture if enabled
+   if(g_normalOn) { rightArm.textureNum = -3; } // Use normal texture if enabled
    //rightArm.textureNum = 5;
    rightArm.matrix = new Matrix4(yellowCoordinatesMat);  
    rightArm.matrix.translate(0, .5 , .45);  
@@ -783,15 +764,17 @@ function drawScene() {
    rightArm.render();
 
   //render sphere
+  
   var sphere = new Sphere(); // Create a sphere for the head
   sphere.color = [1.0, 0.8, 0.6, 1.0]; // Set head color
-  if(g_normalOn) { sphere.textureNum = 6; } // Use normal texture if enabled
-  //sphere.textureNum = 5; // Use texture unit 5 (meteor texture)
-  sphere.matrix.setTranslate(-.30, 0.2, 0); // Position the head above the body
-  sphere.matrix.scale(0.3, 0.3, 0.3); // Scale the head
-  sphere.render();
+
+  if(g_normalOn) { sphere.textureNum = -3; } // Use normal texture if enabled
+  sphere.textureNum = 4; // Use texture unit 5 (meteor texture)
+  sphere.matrix.setTranslate(-.30, 9, 0); // Position the head above the body
+  sphere.matrix.scale(5, 5, 5); // Scale the head
  
+  sphere.render();
+
 }
 
 
- 

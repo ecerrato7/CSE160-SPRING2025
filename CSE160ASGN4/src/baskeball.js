@@ -5,7 +5,12 @@ class Sphere {
      this.matrix = new Matrix4();
      this.textureNum = -2; // Default texture number
      this.verts32 = new Float32Array([]);
-
+     this.vertices = [];
+    this.normals = [];
+    this.uvs = [];
+     this.vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
   }
 
 render() {
@@ -13,8 +18,8 @@ render() {
   gl.uniform1i(u_whichTexture, this.textureNum);
   gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
   gl.uniformMatrix4fv(u_ModelMatrix, false, this.matrix.elements);
-  var d = Math.PI / 25;
-  var dd = Math.PI / 25;
+  var d = Math.PI / 10;
+  var dd = Math.PI / 10;
  
   var sin = Math.sin;
   var cos = Math.cos;
@@ -51,6 +56,10 @@ render() {
     }
 }
  
-
+   gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexBuffer);
+    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(a_Position);
+    // Repeat for normals and uvs...
+    gl.drawArrays(gl.TRIANGLES, 0, this.vertices.length / 3);
   }
 }

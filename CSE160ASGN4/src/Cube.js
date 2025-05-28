@@ -4,6 +4,7 @@ class Cube {
       this.color = [1.0, 1.0, 1.0, 1.0];  // Color RGBA
       this.matrix = new Matrix4();
       this.textureNum = -2;
+      this.normalMatrix = new Matrix4();
       this.cubeVert32= new Float32Array([
         0, 0, 0,   1, 1, 0,   1, 0, 0,
         0, 0, 0,   0, 1, 0,   1, 1, 0,
