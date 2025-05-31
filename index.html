@@ -3,118 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <title>Change a Point Color</title>
+  <script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.176.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.176.0/examples/jsm/"
+  }
+}
+</script>
 </head>
 
 <body onload="main()">
   <canvas id="webgl" width="1000" height="800">
-    Please use a browser that supports "canvas".
-  </canvas>
-
-  <div id="numdot"></div>
-    <br/><br/>
-    <button id="lightAnimOn">Light Animate On</button>
-<button id="lightAnimOff">Light Animate Off</button>
-    <br/><br/>
-    Light X <input type="range" id="lightSlideX" min="-250" max="1000"   class = "slider" value="0">
-    Light Y <input type="range" id="lightSlideY" min="-250" max="1000"   class = "slider" value="100">
-    Light Z <input type="range" id="lightSlideZ" min="-250" max="1000"   class = "slider" value="-200">
-  <br/><br/>
-     <button id = "normalOn">Normal On</button>
-   <button id = "normalOff">Normal Off</button>
-     <br/><br/>
-    <button id="lightOnBtn">Light On</button>
-    <button id="lightOffBtn">Light Off</button>
-          <br/><br/>
-  <div>
-    Performance: 
-    FPS: <span id="fps">0</span><br>
-    MS: <span id="ms">0</span> ms
-  </div>
-  <div>
-    <label>
-      Magenta
-      <input type="range" id="magentaSlide" min="-180" max="180">
-    </label>
-    Animation
-    <button id="animationMagentaOnButton">On</button>
-    <button id="animationMagentaOffButton">Off</button>
-    <br/>
-
-    <label>
-      Yellow
-      <input type="range" id="yellowSlide" min="-180" max="180">
-    </label>
-    Animation
-    <button id="animationYellowOnButton">On</button>
-    <button id="animationYellowOffButton">Off</button>
-    <br/><br/>
-    <div>
-      <label>
-        Left Arm Animation:
-        <button id="leftArmAnimationOn">On</button>
-        <button id="leftArmAnimationOff">Off</button>
-      </label>
-      <br/><br/>
-    
-      <label>
-        Right Arm Animation:
-        <button id="rightArmAnimationOn">On</button>
-        <button id="rightArmAnimationOff">Off</button>
-      </label>
-      <br/><br/>
-    </div>
-    <label>
-      Camera Angle
-      <input type="range" id="angleSlide" min="-180" max="180">
-      <br/><br/>
-      Camera Speed
-      <input type="range" id="speedSlider" min="0.01" max="1" step="0.01" value="0.1">
-      <br/><br/>
-      <button id="resetButton">Reset Camera</button>
-
-    </label>
-  </div>
-  <div id="cameraPosition" style="position: absolute; top: 10px; left: 10px; color: white; background: rgba(0, 0, 0, 0.5); padding: 10px;">
-</div>
-
-  <br/><br/>
-  <br/><br/>
-  Controls: W- move forward , A- Move left, S-Move Back, D-Move Right
-  <br/><br/>
-  Q-Pan Left , E- Pan Right
-  <br/><br/>
-  X- Place Block Down, C-Delete Block,
-  <br/><br/>
-  Y-Move Up, U-Move Down
-  <br/><br/>
-  Click and Drag to rotate
-
-  <br/><br/>
-  Story:
-  <br/><br/>
-  Look Up in the sky
-    <br/><br/>
-  <!-- WebGL and App Scripts -->
-  
-  <script src="CSE160ASGN4/lib/webgl-utils.js"></script>
-  <script src="CSE160ASGN4/lib/webgl-debug.js"></script>
-  <script src="CSE160ASGN4/lib/cuon-utils.js"></script>
-  <script src="CSE160ASGN4/lib/stats.js"></script>
-  <script src="CSE160ASGN4/lib/OBJLOADER.js"></script>
-   
-  <script src="CSE160ASGN4/lib/cuon-matrix-cse160.js"></script>
-  <script src="CSE160ASGN4/src/shader.js"></script>
-  <script src="CSE160ASGN4/src/Point.js"></script>
-  <script src="CSE160ASGN4/src/sunflower.js" ></script>
-  <script src="CSE160ASGN4/src/Triangle.js"></script>
-  <script src="CSE160ASGN4/src/Circle.js"></script>
-  <script src="CSE160ASGN4/src/Cube.js"></script>
-  <script src="CSE160ASGN4/src/blocks.js"></script>
-  <script src = "CSE160ASGN4/src/baskeball.js" ></script>
-  <script src = "CSE160ASGN4/src/herd.js" ></script>
-  <script src="CSE160ASGN4/src/Camera.js"></script>
-   <script src="CSE160ASGN4/lib/obj.js"></script>
-
-  <script src="CSE160ASGN4/src/World.js"></script>
+<script type="module" src="main.js"></script>
 </body>
 </html>
