@@ -4,7 +4,7 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { addRainToScene, updateRain } from './Rainy.js';
 import { addMistToScene } from './mist.js';
-import { createPond, updatePond } from './Water.js';
+import { createPond, updatePond } from './water.js';
  import { getRandomClearPosition } from './spawn.js';
 
 
