@@ -88,6 +88,19 @@ objLoader.load('farmhouse_obj.obj', function(object) {
   object.position.set(-10, 0, 12);
   scene.add(object);
 });
+
+objLoader.load('farmhouse_obj.obj', function(object) {
+  object.traverse(function(child) {
+    if (child instanceof THREE.Mesh) {
+      child.material = new THREE.MeshPhongMaterial({ map: farmhouseTexture });
+    }
+  });
+
+  object.scale.set(.5, .5, .5);
+  object.position.set(-43, 0, 12); // <-- Change position as desired
+  scene.add(object);
+});
+
 addRainToScene(scene);
 addMistToScene(scene);
 const pond = createPond();
@@ -106,6 +119,12 @@ floor.rotation.x = -Math.PI / 2;
 floor.position.y = 0;
 floor.scale.set(1, 1,0.5);
 scene.add(floor);
+
+const pondGeometry = new THREE.PlaneGeometry(20, 12, 128, 128);
+const pondMaterial = new THREE.MeshPhongMaterial({ color: 0x0D4066, side: THREE.DoubleSide });const pond2 = new THREE.Mesh(pondGeometry, pondMaterial);
+pond2.rotation.x = -Math.PI / 2; // Make it flat on the floor
+pond2.position.set(12, 0.01, -12); 
+scene.add(pond2);
 
 // Horizontal road (east-west)
 const roadHGeometry = new THREE.PlaneGeometry(100, 5); // long and wide

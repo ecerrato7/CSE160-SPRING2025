@@ -6,7 +6,8 @@ const vertexShader = `
   void main() {
     vUv = uv;
     vec3 pos = position;
-    pos.z += sin(pos.x * 2.0 + time) * 0.1 + cos(pos.y * 2.0 + time) * 0.1;
+    pos.z += sin(pos.x * 2.0 + time) * 0.05 + cos(pos.y * 2.0 + time) * 0.05;
+    
     gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
   }
 `;
@@ -14,29 +15,28 @@ const vertexShader = `
 const fragmentShader = `
   varying vec2 vUv;
   void main() {
-    // Deeper water color
-    vec3 waterColor = vec3(0.05, 0.25, 0.4);
-    // Subtle rippling for realism
-    float ripple = 0.9 + 0.1 * sin(15.0 * vUv.x + 15.0 * vUv.y);
-    gl_FragColor = vec4(waterColor * ripple, 1.0);  // 1.0 = fully opaque
+    vec3 waterColor = vec3(0.20, 0.60, 1.0);
+    float ripple = 1.0 + 0.03 * sin(15.0 * vUv.x + 15.0 * vUv.y);
+    gl_FragColor = vec4(waterColor * ripple, 1.0);
   }
 `;
 
 function createPond() {
-  const geometry = new THREE.PlaneGeometry(8, 5, 64, 64);
+  const geometry = new THREE.PlaneGeometry(20, 12, 128, 128);  
+
   const material = new THREE.ShaderMaterial({
     vertexShader,
     fragmentShader,
     uniforms: {
       time: { value: 0 }
     },
-    side: THREE.DoubleSide, // Ensure both sides render
-    transparent: false // Full opacity
+    side: THREE.DoubleSide,  
+    transparent: false  
   });
 
   const pond = new THREE.Mesh(geometry, material);
   pond.rotation.x = -Math.PI / 2;
-  pond.position.set(12, 0.01, -5);  // Slightly above grass to avoid z-fighting
+  pond.position.set(12, 0.01, -12);  
   pond.name = "pond";
   return pond;
 }
